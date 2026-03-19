@@ -1,0 +1,21 @@
+{
+  "name": "smart-security-system-backend",
+  "version": "1.0.0",
+  "description": "API serverless para el Sistema de Seguridad Inteligente",
+  "main": "index.js",
+  "engines": {
+    "node": ">=18.x"
+  },
+  "scripts": {
+    "dev":   "vercel dev",
+    "deploy": "vercel deploy --prod",
+    "lint":   "eslint api/ lib/ middleware/"
+  },
+  "dependencies": {
+    "pg": "^8.11.5"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "vercel": "^34.0.0"
+  }
+}

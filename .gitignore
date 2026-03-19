@@ -1,0 +1,39 @@
+# ── Credenciales — NUNCA subir al repositorio ─────────────────
+.env
+*.env.local
+.env.production
+
+# ── Python ─────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+venv/
+.venv/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+
+# ── Logs ───────────────────────────────────────────────────────
+logs/
+*.log
+
+# ── Modelos de dlib (archivos grandes — usar wget en setup) ────
+local-system/models/*.dat
+local-system/models/*.bz2
+
+# ── Node.js ────────────────────────────────────────────────────
+node_modules/
+.vercel/
+.next/
+
+# ── Sistema operativo ──────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+
+# ── IDE ────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.iml

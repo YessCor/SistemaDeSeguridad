@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "name": "smart-security-system-api",
+  "routes": [
+    { "src": "/api/register", "dest": "/api/register.js" },
+    { "src": "/api/login",    "dest": "/api/login.js"    },
+    { "src": "/api/logs",     "dest": "/api/logs.js"     },
+    { "src": "/api/usuarios", "dest": "/api/usuarios.js" }
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "functions": {
+    "api/*.js": {
+      "maxDuration": 10,
+      "memory": 256
+    }
+  }
+}

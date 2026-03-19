@@ -1,0 +1,92 @@
+# docker-compose.yml
+# Sistema de Seguridad Inteligente - Configuración de contenedores
+
+version: '3.8'
+
+services:
+  # ============================================================
+  # Sistema de Seguridad Local (Python)
+  # ============================================================
+  security-system:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: smart-security-local
+    environment:
+      - BACKEND_URL=${BACKEND_URL:-http://backend:3000}
+      - API_KEY=${API_KEY:-change_me_in_production}
+      - FACE_TOLERANCE=${FACE_TOLERANCE:-0.50}
+      - FACE_MODEL=${FACE_MODEL:-large}
+      - BLINK_THRESHOLD=${BLINK_THRESHOLD:-0.25}
+      - BLINKS_REQUIRED=${BLINKS_REQUIRED:-2}
+      - HEAD_ANGLE_THRESHOLD=${HEAD_ANGLE_THRESHOLD:-15.0}
+      - MAX_FAILED_ATTEMPTS=${MAX_FAILED_ATTEMPTS:-3}
+      - LOCKOUT_MINUTES=${LOCKOUT_MINUTES:-5}
+      - CAMERA_INDEX=${CAMERA_INDEX:-0}
+      - FRAME_WIDTH=${FRAME_WIDTH:-640}
+      - FRAME_HEIGHT=${FRAME_HEIGHT:-480}
+      - TARGET_FPS=${TARGET_FPS:-30}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - LOG_FILE=/app/logs/system.log
+    volumes:
+      - ./logs:/app/logs
+      - /dev/video0:/dev/video0  # Webcam del host
+    devices:
+      - /dev/video0:/dev/video0  # Dispositivo de video
+    network_mode: host  # Necesario para acceder a la webcam
+    restart: unless-stopped
+    stdin_open: true  # docker run -i
+    tty: true  # docker run -t
+
+  # ============================================================
+  # Backend (Node.js) - Desarrollo local
+  # ============================================================
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: smart-security-backend
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=${DATABASE_URL:-postgresql://user:pass@localhost:5432/db}
+      - API_KEY=${API_KEY:-change_me_in_production}
+      - MAX_FAILED_ATTEMPTS=${MAX_FAILED_ATTEMPTS:-3}
+      - LOCKOUT_MINUTES=${LOCKOUT_MINUTES:-5}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    networks:
+      - security-network
+
+  # ============================================================
+  # Base de datos PostgreSQL (Desarrollo)
+  # ============================================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: smart-security-db
+    environment:
+      - POSTGRES_USER=security_user
+      - POSTGRES_PASSWORD=security_pass
+      - POSTGRES_DB=security_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ../docs/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    restart: unless-stopped
+    networks:
+      - security-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U security_user -d security_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+# ============================================================
+# VOLUMES
+# ============================================================
+volumes:
+  postgres_data:
+

@@ -1,0 +1,22 @@
+# local-system/requirements.txt
+# Sistema de Seguridad Inteligente — dependencias Python
+
+# Visión por computadora
+opencv-python>=4.9.0
+face-recognition>=1.3.0
+dlib>=19.24.2
+numpy>=1.26.0
+
+# Comunicación HTTP
+requests>=2.31.0
+urllib3>=2.0.0
+
+# Variables de entorno
+python-dotenv>=1.0.0
+
+# Utilidades
+Pillow>=10.0.0
+
+# Desarrollo / testing
+pytest>=8.0.0
+pytest-mock>=3.12.0
