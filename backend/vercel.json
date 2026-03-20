@@ -1,18 +1,20 @@
 {
   "version": 2,
   "name": "smart-security-system-api",
-  "routes": [
-    { "src": "/api/(.*)",     "dest": "/api/index.js" },
-    { "src": "/test-panel",   "dest": "/api/index.js" },
-    { "src": "/",             "dest": "/api/index.js" }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  },
-  "functions": {
-    "api/*.js": {
-      "maxDuration": 10,
-      "memory": 256
+  "builds": [
+    {
+      "src": "api/index.js",
+      "use": "@vercel/node"
     }
-  }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/index.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/api/index.js"
+    }
+  ]
 }
